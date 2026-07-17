@@ -130,6 +130,8 @@ pixel-painter.lua
 amaze.c
 #endif
 
+helloworld.c
+
 rockblox1d.c
 brickmania.c
 calendar.c
