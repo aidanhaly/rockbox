@@ -131,6 +131,7 @@ amaze.c
 #endif
 
 helloworld.c
+road.c
 
 rockblox1d.c
 brickmania.c
