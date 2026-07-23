@@ -7,8 +7,13 @@ enum plugin_status plugin_start(const void* parameter){
 	int offset=0;
 	int horizon_y = (LCD_HEIGHT/10)*5.5; //121
 	int focal = 3000;
+	int distance;
+	int nextDistance;
+	int distanceDelta=0;
 
     while(!quit){
+		int dx=0,ddx=0;
+		int current_x = 0;
         rb->lcd_clear_display();
         rb->lcd_set_foreground(LCD_RGBPACK(3,219,252));
         rb->lcd_fillrect(0,0,LCD_WIDTH,LCD_HEIGHT);
@@ -18,7 +23,8 @@ enum plugin_status plugin_start(const void* parameter){
 			if(((LCD_HEIGHT-i+25)-horizon_y)<=0){
 				continue;
 			}
-			int distance = focal/((LCD_HEIGHT-i+25)-horizon_y);
+			distance = focal/((LCD_HEIGHT-i+25)-horizon_y);
+			nextDistance = focal/((LCD_HEIGHT-i+26)-horizon_y);
 		    int strip_width = focal*10/distance;
 	        int x = (LCD_WIDTH/2) - (strip_width/2);
 			if((distance+offset)%40 < 20){
@@ -27,6 +33,15 @@ enum plugin_status plugin_start(const void* parameter){
 			else{
 				rb->lcd_set_foreground(LCD_RGBPACK(70,70,70));
 			}
+
+			distanceDelta = distance - nextDistance;
+
+			dx = 1*distanceDelta;
+			ddx += dx;
+			current_x += ddx*distanceDelta;
+
+			x += current_x/2000;
+
 	        rb->lcd_fillrect(x,LCD_HEIGHT-i+25,strip_width,1);
 		}
 		rb->lcd_update();
