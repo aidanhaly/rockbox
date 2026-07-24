@@ -40,8 +40,12 @@ enum plugin_status plugin_start(const void* parameter){
 			ddx += dx;
 			current_x += ddx*distanceDelta;
 
-			x += current_x/2000;
+			// if(i == ((LCD_HEIGHT/10)*4.5)+24){
+			// 	rb->splashf(HZ*2,"end offset being added to x : %d, distance delta: %d, ddx: %d, middle x = %d",current_x/10000,distanceDelta,ddx,x);
+			// }
 
+			x += current_x/8000;
+			
 	        rb->lcd_fillrect(x,LCD_HEIGHT-i+25,strip_width,1);
 		}
 		rb->lcd_update();
