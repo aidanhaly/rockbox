@@ -8,20 +8,33 @@ enum plugin_status plugin_start(const void* parameter){
 	int horizon_y = (LCD_HEIGHT/10)*5.5; //121
 	int focal = 121;
 	int distance;
-	int screen_y1, screen_y2;
-	int nextDistance;
-	int distanceDelta=0;
 	int strip_width;
-	int height;
-	int x;
 	int x_offset [focal+1];
+	int road_length = 1000;
+	int road_1 [road_length];
+	int index;
+	int current_position = 0;
 
 	for(int j=0;j<focal+1;j++){
 		x_offset[j] = 0;
 	}
+	for(int i=0; i < road_length;i++){
+		if(i<road_length/4){
+			road_1[i] = 5;
+		}
+		else if(i<road_length/2){
+			road_1[i]=0;
+		}
+		else if(i<3*(road_length/4)){
+			road_1[i]= -5;
+		}
+		else{
+			road_1[i]=10;
+		}
+	}
 
     while(!quit){
-		int dx=0,ddx=0;
+		int ddx=0;
 		int current_x = 0;
         rb->lcd_clear_display();
         rb->lcd_set_foreground(LCD_RGBPACK(3,219,252));
@@ -50,8 +63,8 @@ enum plugin_status plugin_start(const void* parameter){
 		// 	rb->lcd_fillrect(x,screen_y1,strip_width,height);
 		// }
 		for(int distance=1;distance<focal;distance++){
-
-			ddx += 5;
+			index = (current_position + distance) % road_length;
+			ddx += road_1[index];
 			current_x += ddx;
 
 			// if(i == ((LCD_HEIGHT/10)*4.5)+24){
@@ -93,6 +106,10 @@ enum plugin_status plugin_start(const void* parameter){
 		}
 		rb->lcd_update();
 		offset++;
+		current_position++;
+		if(current_position>= road_length){
+			current_position = 0;
+		}
 
 		button=rb->button_get(false);
 		if(button ==  BUTTON_POWER){
