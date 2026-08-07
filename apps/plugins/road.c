@@ -66,15 +66,13 @@ enum plugin_status plugin_start(const void* parameter){
 			distance = focal/(y-horizon_y);
 			
 		    //int strip_width = focal*2/distance;
-			strip_width = 4 * (y - horizon_y);
+			strip_width = 3 * (y - horizon_y);
 
-			if(strip_width < 5){
-				continue;
-			}
+			strip_width += 20;
 
 	        int x = (LCD_WIDTH/2) - (strip_width/2);
 
-			if((distance+offset)%20 < 10){
+			if((distance+offset)%26 < 13){
 				rb->lcd_set_foreground(LCD_RGBPACK(4,179,10));
 				rb->lcd_fillrect(0,y,LCD_WIDTH,1);
 				rb->lcd_set_foreground(LCD_RGBPACK(30,30,30));
