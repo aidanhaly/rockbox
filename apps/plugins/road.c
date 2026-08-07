@@ -50,27 +50,23 @@ enum plugin_status plugin_start(const void* parameter){
 		// 	rb->lcd_fillrect(x,screen_y1,strip_width,height);
 		// }
 		for(int distance=1;distance<focal;distance++){
-			distanceDelta = nextDistance - distance ;
 
-			dx = 1*distanceDelta;
-			ddx += dx;
-			current_x += ddx*distanceDelta;
+			ddx += 5;
+			current_x += ddx;
 
 			// if(i == ((LCD_HEIGHT/10)*4.5)+24){
 			// 	rb->splashf(HZ*2,"end offset being added to x : %d, distance delta: %d, ddx: %d, middle x = %d",current_x/10000,distanceDelta,ddx,x);
 			// }
 
-			x += current_x/8000;
+			x_offset[distance]  =  current_x/50;
 		}
-	    for(int y = horizon_y + 1; y < LCD_HEIGHT; y++){
+	    for(int y = horizon_y + 2; y < LCD_HEIGHT; y++){
 			distance = focal/(y-horizon_y);
 			
 		    //int strip_width = focal*2/distance;
-			strip_width = 3 * (y - horizon_y);
+			strip_width = 3 * (y - horizon_y) + 20;
 
-			strip_width += 20;
-
-	        int x = (LCD_WIDTH/2) - (strip_width/2);
+	        int x = (LCD_WIDTH/2) - (strip_width/2) + x_offset[distance];
 
 			if((distance+offset)%26 < 13){
 				rb->lcd_set_foreground(LCD_RGBPACK(4,179,10));
@@ -78,15 +74,19 @@ enum plugin_status plugin_start(const void* parameter){
 				rb->lcd_set_foreground(LCD_RGBPACK(30,30,30));
 				rb->lcd_fillrect(x,y,strip_width,1);
 				rb->lcd_set_foreground(LCD_RGBPACK(227,2,2));
-				rb->lcd_fillrect(x,y,(strip_width/8),1);
-				rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
+				if(strip_width > 25){
+					rb->lcd_fillrect(x,y,(strip_width/8),1);
+					rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
+				}
 			}
 			else{
 				rb->lcd_set_foreground(LCD_RGBPACK(70,70,70));
 				rb->lcd_fillrect(x,y,strip_width,1);
 				rb->lcd_set_foreground(LCD_RGBPACK(255,255,255));
-				rb->lcd_fillrect(x,y,(strip_width/8),1);
-				rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
+				if(strip_width > 25){
+					rb->lcd_fillrect(x,y,(strip_width/8),1);
+					rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
+				}
 			}
 
 	        
