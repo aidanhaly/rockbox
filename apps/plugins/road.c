@@ -1,5 +1,8 @@
 #include "plugin.h"
 
+#define PLAYER_LEFT BUTTON_SCROLL_BACK
+#define PLAYER_RIGHT BUTTON_SCROLL_FWD
+
 enum plugin_status plugin_start(const void* parameter){
     (void)parameter;
     bool quit = false;
@@ -13,7 +16,8 @@ enum plugin_status plugin_start(const void* parameter){
 	int road_length = 1000;
 	int road_1 [road_length];
 	int index;
-	int current_position = 0;
+	int current_track_position = 0;
+	int player_x_position = 0;
 
 	for(int j=0;j<focal+1;j++){
 		x_offset[j] = 0;
@@ -63,7 +67,7 @@ enum plugin_status plugin_start(const void* parameter){
 		// 	rb->lcd_fillrect(x,screen_y1,strip_width,height);
 		// }
 		for(int distance=1;distance<focal;distance++){
-			index = (current_position + distance) % road_length;
+			index = (current_track_position + distance) % road_length;
 			ddx += road_1[index];
 			current_x += ddx;
 
@@ -71,7 +75,7 @@ enum plugin_status plugin_start(const void* parameter){
 			// 	rb->splashf(HZ*2,"end offset being added to x : %d, distance delta: %d, ddx: %d, middle x = %d",current_x/10000,distanceDelta,ddx,x);
 			// }
 
-			x_offset[distance]  =  current_x/50;
+			x_offset[distance]  =  current_x/50 - player_x_position;
 		}
 	    for(int y = horizon_y + 2; y < LCD_HEIGHT; y++){
 			distance = focal/(y-horizon_y);
@@ -102,19 +106,33 @@ enum plugin_status plugin_start(const void* parameter){
 				}
 			}
 
+			rb->lcd_set_foreground(LCD_RGBPACK(30,0,255));
+			rb->lcd_fillrect((LCD_WIDTH/2)-20,LCD_HEIGHT-25,40,20);
+
 	        
 		}
 		rb->lcd_update();
 		offset++;
-		current_position++;
-		if(current_position>= road_length){
-			current_position = 0;
+		current_track_position++;
+		if(current_track_position>= road_length){
+			current_track_position = 0;
 		}
 
 		button=rb->button_get(false);
-		if(button ==  BUTTON_POWER){
-			break;
+		switch(button){
+			case BUTTON_POWER:
+				quit = true;
+				break;
+			case PLAYER_LEFT:
+				player_x_position -= 5;
+				break;
+			case PLAYER_RIGHT:
+				player_x_position += 5;
+				break;
 		}
+		// if(button ==  BUTTON_POWER){
+		// 	break;
+		// }
     }
     return PLUGIN_OK;
 }
