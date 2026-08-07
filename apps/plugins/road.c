@@ -62,22 +62,36 @@ enum plugin_status plugin_start(const void* parameter){
 
 			x += current_x/8000;
 		}
-	    for(int i=70; i<((LCD_HEIGHT/10)*4.5)+70;i++){
-			if(((LCD_HEIGHT-i+70)-horizon_y)<=0){
+	    for(int y = horizon_y + 1; y < LCD_HEIGHT; y++){
+			distance = focal/(y-horizon_y);
+			
+		    //int strip_width = focal*2/distance;
+			strip_width = 4 * (y - horizon_y);
+
+			if(strip_width < 5){
 				continue;
 			}
-			distance = focal/((LCD_HEIGHT-i+70)-horizon_y);
-			nextDistance = focal/((LCD_HEIGHT-i+71)-horizon_y);
-		    int strip_width = focal*10/distance;
+
 	        int x = (LCD_WIDTH/2) - (strip_width/2);
+
 			if((distance+offset)%20 < 10){
+				rb->lcd_set_foreground(LCD_RGBPACK(4,179,10));
+				rb->lcd_fillrect(0,y,LCD_WIDTH,1);
 				rb->lcd_set_foreground(LCD_RGBPACK(30,30,30));
+				rb->lcd_fillrect(x,y,strip_width,1);
+				rb->lcd_set_foreground(LCD_RGBPACK(227,2,2));
+				rb->lcd_fillrect(x,y,(strip_width/8),1);
+				rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
 			}
 			else{
 				rb->lcd_set_foreground(LCD_RGBPACK(70,70,70));
+				rb->lcd_fillrect(x,y,strip_width,1);
+				rb->lcd_set_foreground(LCD_RGBPACK(255,255,255));
+				rb->lcd_fillrect(x,y,(strip_width/8),1);
+				rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
 			}
 
-	        rb->lcd_fillrect(x,LCD_HEIGHT-i+70,strip_width,1);
+	        
 		}
 		rb->lcd_update();
 		offset++;
