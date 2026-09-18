@@ -599,6 +599,11 @@ pegbox_pieces.9x7x1.bmp
 puzzles_cursor.11x16x24.bmp
 #endif
 
+/* Road */
+#if (LCD_DEPTH > 2)
+road_car.bmp
+#endif
+
 /* Rockblox */
 #if LCD_DEPTH >= 16 /* colour versions*/
 #if   (LCD_WIDTH == 640) && (LCD_HEIGHT == 480)

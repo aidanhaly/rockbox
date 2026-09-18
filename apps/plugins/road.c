@@ -1,4 +1,5 @@
 #include "plugin.h"
+#include "pluginbitmaps/road_car.h"
 
 #define PLAYER_LEFT BUTTON_SCROLL_BACK
 #define PLAYER_RIGHT BUTTON_SCROLL_FWD
@@ -105,12 +106,10 @@ enum plugin_status plugin_start(const void* parameter){
 					rb->lcd_fillrect(x+strip_width-(strip_width/8),y,(strip_width/8),1);
 				}
 			}
-
-			rb->lcd_set_foreground(LCD_RGBPACK(30,0,255));
-			rb->lcd_fillrect((LCD_WIDTH/2)-20,LCD_HEIGHT-25,40,20);
-
-	        
 		}
+
+		rb->lcd_bitmap_transparent(road_car,(LCD_WIDTH/2)-36,LCD_HEIGHT-58,72,48);
+
 		rb->lcd_update();
 		offset++;
 		current_track_position++;
